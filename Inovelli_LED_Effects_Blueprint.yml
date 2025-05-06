@@ -1,0 +1,107 @@
+blueprint:
+  name: Inovelli Set LED Effect (Z-Wave)
+  description: >
+    Set LED notification effects (color, effect type, brightness, duration) on Inovelli Red Series switches and dimmers via Z-Wave JS.
+  domain: automation
+  input:
+    inovelli_dimmer:
+      name: Inovelli Red Series Dimmer (LZW31-SN)
+      description: Select one or more Inovelli dimmers.
+      default: []
+      selector:
+        device:
+          filter:
+            - integration: zwave_js
+              manufacturer: Inovelli
+              model: LZW31-SN
+          multiple: true
+
+    inovelli_switch:
+      name: Inovelli Red Series On/Off Switch (LZW30-SN)
+      description: Select one or more Inovelli switches.
+      default: []
+      selector:
+        device:
+          filter:
+            - integration: zwave_js
+              manufacturer: Inovelli
+              model: LZW30-SN
+          multiple: true
+
+    color:
+      name: LED Color
+      description: 0 = Off, 1 = Red, 21 = Orange, 42 = Yellow, 85 = Green, 127 = Cyan, 145 = Teal, 170 = Blue, 195 = Purple, 234 = Pink, 255 = White
+      default: 1
+      selector:
+        number:
+          min: 0
+          max: 255
+          step: 1
+
+    effect:
+      name: Effect Type
+      description: 0 = Off, 1 = Solid, 2 = Fast Blink, 3 = Slow Blink, 4 = Pulse, 5 = Chase
+      default: 4
+      selector:
+        select:
+          options:
+            - { value: 0, label: "Off" }
+            - { value: 1, label: "Solid" }
+            - { value: 2, label: "Fast Blink" }
+            - { value: 3, label: "Slow Blink" }
+            - { value: 4, label: "Pulse" }
+            - { value: 5, label: "Chase" }
+
+    intensity:
+      name: Brightness Intensity
+      description: 0 = Low, 1 = Medium, 2 = High, 3 = Max
+      default: 3
+      selector:
+        select:
+          options:
+            - { value: 0, label: "Low" }
+            - { value: 1, label: "Medium" }
+            - { value: 2, label: "High" }
+            - { value: 3, label: "Max" }
+
+    duration:
+      name: Duration
+      description: Number of seconds (1–254), or 255 for indefinite
+      default: 255
+      selector:
+        number:
+          min: 1
+          max: 255
+          step: 1
+
+variables:
+  color: !input color
+  effect: !input effect
+  intensity: !input intensity
+  duration: !input duration
+  effect_value: "{{ color + (effect * 256) + (intensity * 65536) + (duration * 16777216) }}"
+
+trigger: []
+
+action:
+  - repeat:
+      for_each: !input inovelli_dimmer
+      sequence:
+        - service: zwave_js.set_config_parameter
+          data:
+            parameter: 16
+            value: "{{ effect_value }}"
+          target:
+            device_id: "{{ repeat.item }}"
+
+  - repeat:
+      for_each: !input inovelli_switch
+      sequence:
+        - service: zwave_js.set_config_parameter
+          data:
+            parameter: 16
+            value: "{{ effect_value }}"
+          target:
+            device_id: "{{ repeat.item }}"
+
+mode: queued
