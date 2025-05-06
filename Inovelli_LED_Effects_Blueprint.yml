@@ -41,28 +41,28 @@ blueprint:
     effect:
       name: Effect Type
       description: 0 = Off, 1 = Solid, 2 = Fast Blink, 3 = Slow Blink, 4 = Pulse, 5 = Chase
-      default: 4
+      default: "4"
       selector:
         select:
           options:
-            - { value: 0, label: "Off" }
-            - { value: 1, label: "Solid" }
-            - { value: 2, label: "Fast Blink" }
-            - { value: 3, label: "Slow Blink" }
-            - { value: 4, label: "Pulse" }
-            - { value: 5, label: "Chase" }
+            - { value: "0", label: "Off" }
+            - { value: "1", label: "Solid" }
+            - { value: "2", label: "Fast Blink" }
+            - { value: "3", label: "Slow Blink" }
+            - { value: "4", label: "Pulse" }
+            - { value: "5", label: "Chase" }
 
     intensity:
       name: Brightness Intensity
       description: 0 = Low, 1 = Medium, 2 = High, 3 = Max
-      default: 3
+      default: "3"
       selector:
         select:
           options:
-            - { value: 0, label: "Low" }
-            - { value: 1, label: "Medium" }
-            - { value: 2, label: "High" }
-            - { value: 3, label: "Max" }
+            - { value: "0", label: "Low" }
+            - { value: "1", label: "Medium" }
+            - { value: "2", label: "High" }
+            - { value: "3", label: "Max" }
 
     duration:
       name: Duration
@@ -76,8 +76,8 @@ blueprint:
 
 variables:
   color: !input color
-  effect: !input effect
-  intensity: !input intensity
+  effect: "{{ iif(is_number(!input effect), !input effect, int(!input effect)) }}"
+  intensity: "{{ iif(is_number(!input intensity), !input intensity, int(!input intensity)) }}"
   duration: !input duration
   effect_value: "{{ color + (effect * 256) + (intensity * 65536) + (duration * 16777216) }}"
 
