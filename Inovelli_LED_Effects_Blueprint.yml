@@ -45,18 +45,18 @@ blueprint:
       selector:
         select:
           options:
-            - value: "0"
-              label: "Off"
-            - value: "1"
-              label: "Solid"
-            - value: "2"
-              label: "Fast Blink"
-            - value: "3"
-              label: "Slow Blink"
-            - value: "4"
-              label: "Pulse"
-            - value: "5"
-              label: "Chase"
+            - label: "Off"
+              value: "0"
+            - label: "Solid"
+              value: "1"
+            - label: "Fast Blink"
+              value: "2"
+            - label: "Slow Blink"
+              value: "3"
+            - label: "Pulse"
+              value: "4"
+            - label: "Chase"
+              value: "5"
 
     intensity:
       name: Brightness Intensity
@@ -65,14 +65,14 @@ blueprint:
       selector:
         select:
           options:
-            - value: "0"
-              label: "Low"
-            - value: "1"
-              label: "Medium"
-            - value: "2"
-              label: "High"
-            - value: "3"
-              label: "Max"
+            - label: "Low"
+              value: "0"
+            - label: "Medium"
+              value: "1"
+            - label: "High"
+              value: "2"
+            - label: "Max"
+              value: "3"
 
     duration:
       name: Duration
